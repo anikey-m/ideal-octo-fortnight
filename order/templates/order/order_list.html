@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Список заказов</title>
+</head>
+<body>
+    <table>
+        <caption>Заказы</caption>
+        <thead>
+            <tr>
+                <td>Номер заказа</td>
+                <td>Дата создания</td>
+                <td>Дата изменения</td>
+                <td>Сумма</td>
+                <td>Контрагент</td>
+                <td>Текст заказа</td>
+            </tr>
+        </thead>
+        <tbody>
+        {% for order in page_obj %}
+            <tr>
+                <td>{{ order.id }}</td>
+                <td>{{ order.created | date }}</td>
+                <td>{{ order.changed | date }}</td>
+                <td>{{ order.total }}</td>
+                <td>{{ order.contractor }}</td>
+                <td>{{ order.text }}</td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="6" style="text-align: center">Заказов нет</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo;</a>
+                <a href="?page={{ page_obj.previous_page_number }}">&lt;</a>
+            {% endif %}
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">&gt;</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">&raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+
+</body>
+</html>
