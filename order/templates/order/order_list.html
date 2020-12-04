@@ -21,11 +21,11 @@
         {% for order in page_obj %}
             <tr>
                 <td>{{ order.id }}</td>
-                <td>{{ order.created | date }}</td>
-                <td>{{ order.changed | date }}</td>
-                <td>{{ order.total }}</td>
+                <td>{{ order.created | date }} {{ order.created | time }}</td>
+                <td>{{ order.changed | date }} {{ order.changed | time }}</td>
+                <td>{{ order.total | format:"{:0.2f}" }}₽</td>
                 <td>{{ order.contractor }}</td>
-                <td>{{ order.text }}</td>
+                <td>{{ order.text | truncatechars:32 }}</td>
             </tr>
         {% empty %}
             <tr>
