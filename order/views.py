@@ -21,7 +21,6 @@ class OrderListView(generic.ListView):
         except http.Http404:
             return redirect('order-list')
 
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(object_list=object_list, **kwargs)
-        print(context)
-        return context
+
+class OrderDetailView(generic.DetailView):
+    model = models.Order

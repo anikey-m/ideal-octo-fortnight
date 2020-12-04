@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Заказ #{{ object.id }}</title>
+</head>
+<body>
+<h1>Заказ #{{ object.id }}</h1>
+<span>{{ object.created | date }} {{ object.created | time }}</span><br>
+<span>{{ object.changed | date }} {{ object.changed | time }}</span><br>
+<span>{{ object.total }}</span><br>
+<span>{{ object.contractor }}</span><br>
+<span>{{ object.text }}</span><br>
+</body>
+</html>
