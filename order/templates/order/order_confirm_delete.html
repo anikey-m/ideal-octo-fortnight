@@ -1,13 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Удалить заказ</title>
-</head>
-<body>
+{% extends "order/base.html" %}
+
+{% block head %}
+<title>Заказ #{{ order.id }}</title>
+<style>
+    fieldset[disabled] .mdl-textfield .mdl-textfield__input, .mdl-textfield.is-disabled .mdl-textfield__input {color: inherit}
+    fieldset[disabled] .mdl-textfield .mdl-textfield__label, .mdl-textfield.is-disabled.is-disabled .mdl-textfield__label {color: rgb(33,150,243)}
+  </style>
+{% endblock %}
+
+{% block header %}
+<span class="mdl-layout-title">Удаление: Заказ #{{ order.id }}</span>
+{% endblock %}
+
+{% block content %}
+<div class="mdl-grid">
+    <div class="mdl-cell--8-col">
+        <div class="mdl-grid">
+            {% include "order/order_dates.html" with order=order %}
+            {% include "order/order_form_base.html" with form=form %}
+        </div>
+    </div>
+</div>
+<div class="mdl-grid">
     <form method="post">{% csrf_token %}
-        <p>Удалить "{{ object }}"?</p>
-        <input type="submit" value="Да">
+        <p>Удалить?</p>
+        <input type="submit" value="Да" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+        <a href="{% url 'order_view' order.id %}" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colore">Нет</a>
     </form>
-</body>
-</html>
+</div>
+{% endblock %}

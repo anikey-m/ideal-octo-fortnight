@@ -21,8 +21,8 @@ class OrderListView(generic.ListView):
             return redirect('order_list')
 
 
-class OrderDetailView(generic.DetailView):
-    model = models.Order
+class FormContextMixin:
+    form_class = None
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -30,6 +30,11 @@ class OrderDetailView(generic.DetailView):
         for field in form.fields.values():
             field.widget.attrs['disabled'] = True
         return context
+
+
+class OrderDetailView(FormContextMixin, generic.DetailView):
+    model = models.Order
+    from_class = forms.OrderForm
 
 
 class OrderCreateView(messages_views.SuccessMessageMixin, generic.CreateView):
@@ -46,6 +51,7 @@ class OrderUpdateView(generic.UpdateView):
     form_class = forms.OrderForm
 
 
-class OrderDeleteView(generic.DeleteView):
+class OrderDeleteView(FormContextMixin, generic.DeleteView):
     model = models.Order
+    from_class = forms.OrderForm
     success_url = reverse_lazy('order_list')
