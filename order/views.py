@@ -1,8 +1,6 @@
 from django import http
-from django.shortcuts import render, redirect
-from django.http.response import JsonResponse
-from django.core import serializers
-from django.forms import model_to_dict
+from django.contrib.messages import views as messages_views
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views import generic
 
@@ -27,10 +25,13 @@ class OrderDetailView(generic.DetailView):
     model = models.Order
 
 
-class OrderCreateView(generic.CreateView):
+class OrderCreateView(messages_views.SuccessMessageMixin, generic.CreateView):
     model = models.Order
     fields = ('contractor', 'total', 'text')
     success_url = reverse_lazy('order_list')
+
+    def get_success_message(self, cleaned_data):
+        return f"Заказ #{self.object.id} создан!"
 
 
 class OrderUpdateView(generic.UpdateView):
