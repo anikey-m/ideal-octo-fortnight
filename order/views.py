@@ -24,6 +24,13 @@ class OrderListView(generic.ListView):
 class OrderDetailView(generic.DetailView):
     model = models.Order
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = form = forms.OrderForm(instance=self.object)
+        for field in form.fields.values():
+            field.widget.attrs['disabled'] = True
+        return context
+
 
 class OrderCreateView(messages_views.SuccessMessageMixin, generic.CreateView):
     model = models.Order
@@ -36,7 +43,7 @@ class OrderCreateView(messages_views.SuccessMessageMixin, generic.CreateView):
 
 class OrderUpdateView(generic.UpdateView):
     model = models.Order
-    fields = ('contractor', 'total', 'text')
+    form_class = forms.OrderForm
 
 
 class OrderDeleteView(generic.DeleteView):

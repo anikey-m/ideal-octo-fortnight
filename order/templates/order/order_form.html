@@ -6,41 +6,34 @@
   {% else %}
   <title>Новый заказ</title>
   {% endif %}
+  <style>
+    fieldset[disabled] .mdl-textfield .mdl-textfield__input, .mdl-textfield.is-disabled .mdl-textfield__input {color: inherit}
+    fieldset[disabled] .mdl-textfield .mdl-textfield__label, .mdl-textfield.is-disabled.is-disabled .mdl-textfield__label {color: rgb(33,150,243)}
+  </style>
 {% endblock %}
 
 {% block header %}
   {% if order %}
-  <span class="mdl-layout-title">Заказ #{{ order.id }}</span>
+  <span class="mdl-layout-title">Редактирование: Заказ #{{ order.id }}</span>
   {% else %}
   <span class="mdl-layout-title">Новый заказ</span>
   {% endif %}
 {% endblock %}
 
 {% block content %}
-  {% if order %}
-  <p>
-    <labal>Дата создания:</labal> <span>{{ order.created | date }} {{ order.created | time}}</span>
-  </p>
-  <p>
-    <labal>Дата изменения:</labal> <span>{{ order.changed | date }} {{ order.changed | time}}</span>
-  </p>
-  {% endif %}
-
   <div class="mdl-grid">
     <div class="mdl-cell--8-col">
       <div class="mdl-grid">
         <form method="POST">{% csrf_token %}
-          {% for field in form.visible_fields %}
-            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--12-col">
-              {{ field }}
-              <label class="mdl-textfield__label" for="{{ field.id_for_label }}">{{ field.label }}</label>
-              {% for error in field.errors %}
-              <span class="mdl-textfield__error" style="visibility:visible">{{ error }}</span>
-              {% endfor %}
-            </div>
-          {% endfor %}
+          {% if order %}
+          {% include "order/order_dates.html" with order=order %}
+          {% endif %}
+          {% include "order/order_form_base.html" with form=form %}
           <div class="mdl-cell mdl-cell--12-col">
             <input type="submit" value="Сохранить" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+            {% if order %}
+            <a href="{% url 'order_view' order.id %}" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colore">Отменить</a>
+            {% endif %}
           </div>
         </form>
       </div>

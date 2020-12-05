@@ -1,0 +1,9 @@
+{% for field in form.visible_fields %}
+<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--12-col">
+  {{ field }}
+  <label class="mdl-textfield__label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+  {% for error in field.errors %}
+  <span class="mdl-textfield__error" style="visibility:visible">{{ error }}</span>
+  {% endfor %}
+</div>
+{% endfor %}

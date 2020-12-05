@@ -1,15 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Заказ #{{ object.id }}</title>
-</head>
-<body>
-<h1>Заказ #{{ object.id }}</h1>
-<span>{{ object.created | date }} {{ object.created | time }}</span><br>
-<span>{{ object.changed | date }} {{ object.changed | time }}</span><br>
-<span>{{ object.total }}</span><br>
-<span>{{ object.contractor }}</span><br>
-<span>{{ object.text }}</span><br>
-</body>
-</html>
+{% extends "order/base.html" %}
+
+{% block head %}
+  <title>Заказ #{{ order.id }}</title>
+  <style>
+    fieldset[disabled] .mdl-textfield .mdl-textfield__input, .mdl-textfield.is-disabled .mdl-textfield__input {color: inherit}
+    fieldset[disabled] .mdl-textfield .mdl-textfield__label, .mdl-textfield.is-disabled.is-disabled .mdl-textfield__label {color: rgb(33,150,243)}
+  </style>
+{% endblock %}
+
+{% block header %}
+  <span class="mdl-layout-title">Просмотр: Заказ #{{ order.id }}</span>
+{% endblock %}
+
+{% block content %}
+<div class="mdl-grid">
+  <div class="mdl-cell--8-col">
+    <div class="mdl-grid">
+      {% include "order/order_dates.html" with order=order %}
+      {% include "order/order_form_base.html" with form=form %}
+    </div>
+  </div>
+</div>
+<div class="mdl-grid">
+  <div class="mdl-cell--12-col">
+    <a href="{% url 'order_edit' order.id %}" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Редактировать</a>
+    <a href="{% url 'order_delete' order.id %}" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colore">Удалить</a>
+  </div>
+</div>
+{% endblock %}

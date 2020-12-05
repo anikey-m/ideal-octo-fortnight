@@ -1,0 +1,8 @@
+<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--12-col">
+  <input class="mdl-textfield__input" id="created" type="datetime-local" disabled value="{{ order.created | date:'Y-m-d\TH:i' }}">
+  <label class="mdl-textfield__label" for="created">Дата создания</label>
+</div>
+<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--12-col">
+  <input class="mdl-textfield__input" id="changed" type="datetime-local" disabled value="{{ order.changed | date:'Y-m-d\TH:i' }}">
+  <label class="mdl-textfield__label" for="changed">Дата изменения</label>
+</div>
