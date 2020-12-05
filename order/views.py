@@ -18,7 +18,7 @@ class OrderListView(generic.ListView):
         try:
             return super().get(request, *args, **kwargs)
         except http.Http404:
-            return redirect('order-list')
+            return redirect('order_list')
 
 
 class OrderDetailView(generic.DetailView):
