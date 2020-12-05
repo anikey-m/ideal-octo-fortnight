@@ -5,6 +5,7 @@
     <title>Список заказов</title>
 </head>
 <body>
+    <a href="{% url 'order_add' %}">Создать заказ</a>
     <table>
         <caption>Заказы</caption>
         <thead>
@@ -23,7 +24,7 @@
                 <td>{{ order.id }}</td>
                 <td>{{ order.created | date }} {{ order.created | time }}</td>
                 <td>{{ order.changed | date }} {{ order.changed | time }}</td>
-                <td>{{ order.total | format:"{:0.2f}" }}₽</td>
+                <td>{{ order.total | floatformat:2 }}₽</td>
                 <td>{{ order.contractor }}</td>
                 <td>{{ order.text | truncatechars:32 }}</td>
             </tr>

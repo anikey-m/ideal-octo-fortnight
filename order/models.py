@@ -1,3 +1,4 @@
+from django.core import validators
 from django.db import models
 
 
@@ -8,7 +9,10 @@ class Order(models.Model):
 
     created = models.DateTimeField('Дата создания', auto_now_add=True)
     changed = models.DateTimeField('Дата изменения', auto_now=True)
-    total = models.DecimalField('Сумма', max_digits=16, decimal_places=2)
+    total = models.DecimalField(
+        'Сумма', max_digits=16, decimal_places=2,
+        validators=[validators.MinValueValidator(0)]
+    )
     contractor = models.CharField('Контрагент', max_length=128)
     text = models.TextField('Текст заказа')
 

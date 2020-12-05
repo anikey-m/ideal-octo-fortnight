@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% if order %}
+    <title>Заказ #{{ order.id }}</title>
+    {% else %}
+    <title>Новый заказ</title>
+    {% endif %}
+</head>
+<body>
+    {% if order %}
+    <h1>Заказ #{{ order.id }}</h1>
+    <p>
+        <labal>Дата создания:</labal> <span>{{ order.created | date }} {{ order.created | time}}</span>
+    </p>
+    <p>
+        <labal>Дата изменения:</labal> <span>{{ order.changed | date }} {{ order.changed | time}}</span>
+    </p>
+    {% else %}
+    <h1>Новый заказ</h1>
+    {% endif %}
+    <form method="post">{% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Save">
+    </form>
+</body>
+</html>
