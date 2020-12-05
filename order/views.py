@@ -4,7 +4,7 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views import generic
 
-from . import models
+from . import models, forms
 
 
 class OrderListView(generic.ListView):
@@ -27,7 +27,7 @@ class OrderDetailView(generic.DetailView):
 
 class OrderCreateView(messages_views.SuccessMessageMixin, generic.CreateView):
     model = models.Order
-    fields = ('contractor', 'total', 'text')
+    form_class = forms.OrderForm
     success_url = reverse_lazy('order_list')
 
     def get_success_message(self, cleaned_data):

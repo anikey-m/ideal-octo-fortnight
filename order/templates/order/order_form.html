@@ -1,28 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    {% if order %}
-    <title>Заказ #{{ order.id }}</title>
-    {% else %}
-    <title>Новый заказ</title>
-    {% endif %}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.blue-green.min.css">
+  <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+
+  {% if order %}
+  <title>Заказ #{{ order.id }}</title>
+  {% else %}
+  <title>Новый заказ</title>
+  {% endif %}
 </head>
 <body>
-    {% if order %}
-    <h1>Заказ #{{ order.id }}</h1>
-    <p>
-        <labal>Дата создания:</labal> <span>{{ order.created | date }} {{ order.created | time}}</span>
-    </p>
-    <p>
-        <labal>Дата изменения:</labal> <span>{{ order.changed | date }} {{ order.changed | time}}</span>
-    </p>
-    {% else %}
-    <h1>Новый заказ</h1>
-    {% endif %}
-    <form method="post">{% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Save">
-    </form>
+  <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+    <header class="mdl-layout__header">
+      <div class="mdl-layout__header-row">
+        {% if order %}
+        <span class="mdl-layout-title">Заказ #{{ order.id }}</span>
+        {% else %}
+        <span class="mdl-layout-title">Новый заказ</span>
+        {% endif %}
+      </div>
+    </header>
+    <main class="mdl-layout__content">
+      <div class="page-content">
+        {% if order %}
+        <p>
+          <labal>Дата создания:</labal> <span>{{ order.created | date }} {{ order.created | time}}</span>
+        </p>
+        <p>
+          <labal>Дата изменения:</labal> <span>{{ order.changed | date }} {{ order.changed | time}}</span>
+        </p>
+        {% endif %}
+
+        <div class="mdl-grid">
+          <div class="mdl-cell--8-col">
+            <div class="mdl-grid">
+              <form method="POST">{% csrf_token %}
+                {% for field in form.visible_fields %}
+                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--12-col">
+                    {{ field }}
+                    <label class="mdl-textfield__label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {% for error in field.errors %}
+                    <span class="mdl-textfield__error" style="visibility:visible">{{ error }}</span>
+                    {% endfor %}
+                  </div>
+                {% endfor %}
+                <div class="mdl-cell mdl-cell--12-col">
+                  <input type="submit" value="Сохранить" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                </div>
+            </form>
+          </div>
+          <div class="mdl-cell--4-col">
+            {% if form.non_field_errors %}
+            <ul class="mdl-list">
+              {% for error in errors %}
+              <li class="mdl-list__item">
+                <span class="mdl-list__item-primary-content" style="color: red">
+                  <i class="material-icons mdl-list__item-icon">error</i>
+                  {{ error }}
+                </span>
+              </li>
+              {% endfor %}
+            </ul>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
 </body>
 </html>
