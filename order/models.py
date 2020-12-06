@@ -8,7 +8,7 @@ class Order(models.Model):
         verbose_name = 'Заказ'
         verbose_name_plural = 'Заказы'
 
-    created = models.DateTimeField('Дата создания', auto_now_add=True)
+    created = models.DateTimeField('Дата создания', auto_now_add=True, db_index=True)
     changed = models.DateTimeField('Дата изменения', auto_now=True)
     total = models.DecimalField(
         'Сумма', max_digits=16, decimal_places=2,
