@@ -67,6 +67,13 @@ class OrderCreateView(messages_views.SuccessMessageMixin, generic.CreateView):
     def get_success_message(self, cleaned_data):
         return f"Заказ #{self.object.id} создан!"
 
+    def get_success_url(self):
+        if '_continue' in self.request.POST:
+            return reverse_lazy('order_edit', args=(self.object.id,))
+        elif '_new' in self.request.POST:
+            return reverse_lazy('order_add')
+        return reverse_lazy('order_list')
+
 
 class OrderUpdateView(messages_views.SuccessMessageMixin, generic.UpdateView):
     model = models.Order
