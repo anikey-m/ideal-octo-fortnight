@@ -1,64 +1,78 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Список заказов</title>
-</head>
-<body>
-    {% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-        <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %}
-    <a href="{% url 'order_add' %}">Создать заказ</a>
-    <table>
-        <caption>Заказы</caption>
-        <thead>
-            <tr>
-                <td>Номер заказа</td>
-                <td>Дата создания</td>
-                <td>Дата изменения</td>
-                <td>Сумма</td>
-                <td>Контрагент</td>
-                <td>Текст заказа</td>
-            </tr>
-        </thead>
-        <tbody>
-        {% for order in page_obj %}
-            <tr>
-                <td>{{ order.id }}</td>
-                <td>{{ order.created | date }} {{ order.created | time }}</td>
-                <td>{{ order.changed | date }} {{ order.changed | time }}</td>
-                <td>{{ order.total | floatformat:2 }}₽</td>
-                <td>{{ order.contractor }}</td>
-                <td>{{ order.text | truncatechars:32 }}</td>
-            </tr>
-        {% empty %}
-            <tr>
-                <td colspan="6" style="text-align: center">Заказов нет</td>
-            </tr>
-        {% endfor %}
-        </tbody>
+{% extends "order/base.html" %}
+
+{% block head %}
+  <title>Список заказов</title>
+{% endblock %}
+
+{% block header %}
+  <span class="mdl-layout-title">Список заказов</span>
+{% endblock %}
+
+{% block content %}
+  <div class="mdl-grid">
+    <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp mdl-cell--8-col">
+      <thead>
+        <tr>
+          <th>Номер заказа</th>
+          <th>Дата создания</th>
+          <th>Дата изменения</th>
+          <th>Сумма</th>
+          <th>Контрагент</th>
+          <th>Текст заказа</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for order in page_obj %}
+        <tr>
+          <td>{{ order.id }}</td>
+          <td>{{ order.created | date }} {{ order.created | time }}</td>
+          <td>{{ order.changed | date }} {{ order.changed | time }}</td>
+          <td>{{ order.total | floatformat:2 }}₽</td>
+          <td class="mdl-data-table__cell--non-numeric">{{ order.contractor }}</td>
+          <td class="mdl-data-table__cell--non-numeric">{{ order.text | truncatechars:32 }}</td>
+          <td class="mdl-data-table__cell--non-numeric">
+            <a href="{% url 'order_view' order.id %}">Открыть</a>
+          </td>
+        </tr>
+      {% empty %}
+      <tr>
+        <td colspan="7" class="mdl-data-table__cell--non-numeric" style="text-align: center">Заказов нет</td>
+      </tr>
+      {% endfor %}
+      </tbody>
     </table>
-
-    <div class="pagination">
-        <span class="step-links">
-            {% if page_obj.has_previous %}
-                <a href="?page=1">&laquo;</a>
-                <a href="?page={{ page_obj.previous_page_number }}">&lt;</a>
-            {% endif %}
-            <span class="current">
-                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-            </span>
-
-            {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">&gt;</a>
-                <a href="?page={{ page_obj.paginator.num_pages }}">&raquo;</a>
-            {% endif %}
-        </span>
+    <div class="mdl-cell--4-col">
+      {% include "order/messages.html" %}
     </div>
+  </div>
 
-</body>
-</html>
+  <form method="GET" class="mdl-grid">
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--4-col">
+      <input class="mdl-textfield__input" id="start" name="start" type="datetime-local" value="{{ start | date:'Y-m-d\TH:i' }}">
+      <label class="mdl-textfield__label" for="created">С даты</label>
+    </div>
+    <button onclick="javascript:start.value=''" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--color mdl-cell--1-col">X</button>
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--4-col">
+      <input class="mdl-textfield__input" id="end" name="end" type="datetime-local" value="{{ end | date:'Y-m-d\TH:i' }}">
+      <label class="mdl-textfield__label" for="end">По дату</label>
+    </div>
+    <button onclick="javascript:end.value=''" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--color mdl-cell--1-col">X</button>
+    <input type="submit" value="Фильтровать" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent mdl-cell--2-col">
+  </form>
+
+  <div class="mdl-grid">
+    {% if page_obj.has_previous %}
+    <a href="{{ pager_url }}&page=1" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colore mdl-cell--1-col">&laquo;</a>
+    <a href="{{ pager_url }}&page={{ page_obj.previous_page_number }}" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colore mdl-cell--1-col">&lt;</a>
+    {% endif %}
+    <span class="mdl-cell--1-col">
+      Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
+    </span>
+    {% if page_obj.has_next %}
+    <a href="{{ pager_url }}&page={{ page_obj.next_page_number }}" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colore mdl-cell--1-col">&gt;</a>
+    <a href="{{ pager_url }}&page={{ page_obj.paginator.num_pages }}" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colore mdl-cell--1-col">&raquo;</a>
+    {% endif %}
+  </div>
+
+{% endblock %}
